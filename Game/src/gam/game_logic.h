@@ -23,10 +23,11 @@
 
 #define MAX_NUM_BONES   		(5)
 
-#define HORIZONTAL_VELOCITY 	(6)
+#define HORIZONTAL_VELOCITY 	(8)
 #define VERTICAL_VELOCITY 		(5)
 #define JUMP_VELOCITY 			(10)
 #define GRAVITY 				(-2)
+
 
 enum direction
 {
@@ -39,10 +40,23 @@ struct position
 	u16 y;
 };
 
+struct dimension
+{
+	u16 width;
+	u16 height;
+};
+
+enum identity
+{
+	CHAR, MOB, BONUS, LADDER, PLATFORM
+};
+
 struct sprite
 {
 	struct image *img;
 	struct position pos;
+	struct dimension dim;
+	enum identity type;
 };
 
 enum state
