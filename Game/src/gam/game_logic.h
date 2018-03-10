@@ -23,7 +23,7 @@
 
 #define MAX_NUM_BONES   		(5)
 
-#define HORIZONTAL_VELOCITY 	(5)
+#define HORIZONTAL_VELOCITY 	(6)
 #define VERTICAL_VELOCITY 		(5)
 #define JUMP_VELOCITY 			(10)
 #define GRAVITY 				(-2)

@@ -5,10 +5,10 @@
 #include "xil_exception.h"
 #include "xdebug.h"
 #include "string.h"
+#include "sleep.h"
 
 #define DEBUG
 
-#define DMA_DEV_ID			    XPAR_AXIDMA_0_DEVICE_ID
 #define DDR_BASE_ADDR			XPAR_PS7_DDR_0_S_AXI_BASEADDR
 #define MEM_BASE_ADDR		  	(DDR_BASE_ADDR + 0x1000000)
 

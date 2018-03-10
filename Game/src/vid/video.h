@@ -13,7 +13,7 @@
 struct image {
 	u16 width;
 	u16 height;
-	u16 data[];
+	u16 data[0];
 };
 
 void CopyImage(struct image * dest, struct image * src);

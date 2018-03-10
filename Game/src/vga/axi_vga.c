@@ -4,7 +4,8 @@
 static XAxiDma AxiDma;		/* Instance of the XAxiDma */
 
 static volatile int Error;			/* DMA Error flag */
-static volatile u16 *FramePtr;
+static volatile u16 *FramePtr = NULL;
+static volatile u8 newFrame = 0;
 
 /* Double frame buffer */
 static u16 * Frame1 = (u16 *)FRAME1_BASE;
@@ -111,9 +112,8 @@ int DMAConfig(void)
 
 void FrameInit(void)
 {
-	Xil_DCacheFlushRange((UINTPTR) Frame1, FRAME_LEN);
-	Xil_DCacheFlushRange((UINTPTR) Frame2, FRAME_LEN);
-
+	//Xil_DCacheFlushRange((UINTPTR)Frame1, FRAME_LEN);
+	//Xil_DCacheFlushRange((UINTPTR)Frame2, FRAME_LEN);
 	memset(Frame1, 0, FRAME_LEN);
 	memset(Frame2, 0, FRAME_LEN);
 
@@ -185,6 +185,12 @@ void FrameIntrHandler(void *Callback)
 	if ((IrqStatus & XAXIDMA_IRQ_IOC_MASK))
 	{
 		XAxiDma_SimpleTransfer(&AxiDma, (UINTPTR) FramePtr, FRAME_LEN, XAXIDMA_DMA_TO_DEVICE);
+
+		if (newFrame)
+		{
+			FramePtr = newFrame == 1 ? Frame1 : Frame2;
+			Xil_DCacheFlushRange((UINTPTR)FramePtr, FRAME_LEN);
+		}
 	}
 }
 
@@ -203,17 +209,17 @@ void FrameIntrHandler(void *Callback)
 ******************************************************************************/
 void DrawFrame(u16 * img)
 {
+	newFrame = 0;
+
 	if(FramePtr == Frame1)
 	{
-		memcpy(Frame2, img, FRAME_LEN);
-		Xil_DCacheFlushRange((UINTPTR)Frame2, FRAME_LEN);
-		FramePtr = Frame2;
+		memcpy((void *)Frame2, (void *)img, FRAME_LEN);
+		newFrame = 2;
 	}
 	else
 	{
-		memcpy(Frame1, img, FRAME_LEN);
-		Xil_DCacheFlushRange((UINTPTR)Frame1, FRAME_LEN);
-		FramePtr = Frame1;
+		memcpy((void *)Frame1, (void *)img, FRAME_LEN);
+		newFrame = 1;
 	}
 }
 

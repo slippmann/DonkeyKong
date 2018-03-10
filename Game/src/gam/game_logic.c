@@ -80,6 +80,7 @@ void StartGame(void)
 
 		Update();
 
+		memset((void *)frame, 0, FRAME_LEN);
 		DrawFrisk();
 
 		for (int i = 0; i < num_bones; i++)
@@ -87,7 +88,9 @@ void StartGame(void)
 			DrawBone();
 		}
 
+		DrawFrame(frame);
 
+		usleep(100000);
 	}
 }
 
@@ -104,7 +107,7 @@ void Update(void)
 //	frisk_pos.x += xVelocity * time;
 //	frisk_pos.y += yVelocity * time;
 //
-//	yVelocity -= GRAVITY * time;
+//	yVelocity -= GRAVITY * time * time;
 //
 //	if(y == level1 ||
 //		y == level2 ||
@@ -133,6 +136,9 @@ void HandleButtons(void)
 			{
 				currentState = PLAY;
 				DisplayScene();
+
+				// wait until start is released
+				while(buttons & START_MASK);
 			}
 			break;
 		}
@@ -142,6 +148,9 @@ void HandleButtons(void)
 			{
 				currentState = PAUSE;
 				DisplayPauseMenu();
+
+				// wait until start is released
+				while(buttons & START_MASK);
 			}
 
 			if(buttons & UP_MASK)
@@ -183,6 +192,9 @@ void HandleButtons(void)
 			{
 				currentState = PLAY;
 				DisplayScene();
+
+				// wait until start is released
+				while(buttons & START_MASK);
 			}
 			break;
 		}
@@ -192,6 +204,9 @@ void HandleButtons(void)
 			{
 				currentState = MAIN;
 				DisplayMainMenu();
+
+				// wait until start is released
+				while(buttons & START_MASK);
 			}
 			break;
 		}
@@ -202,7 +217,7 @@ void HandleButtons(void)
 
 void DrawFrisk(void)
 {
-	//DrawSprite(frame, frisk, frisk_pos.x, frisk_pos.y);
+	DrawImage(frame, frisk.img, frisk.pos.x, frisk.pos.y);
 }
 
 void DrawBone(void)
@@ -235,13 +250,13 @@ static void Move(enum direction dir)
 {
 	if (dir == LEFT)
 #ifdef DEBUG
-		frisk.pos.x -= 5;
+		frisk.pos.x -= HORIZONTAL_VELOCITY;
 #else
 		xVelocity = -HORIZONTAL_VELOCITY;
 #endif
 	else if (dir == RIGHT)
 #ifdef DEBUG
-		frisk.pos.x += 5;
+		frisk.pos.x += HORIZONTAL_VELOCITY;
 #else
 		xVelocity = HORIZONTAL_VELOCITY;
 #endif

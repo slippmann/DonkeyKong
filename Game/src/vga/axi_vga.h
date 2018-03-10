@@ -15,6 +15,7 @@
 #include "xil_exception.h"
 #include "../int/interrupts.h"
 
+#define DMA_DEV_ID			XPAR_AXIDMA_0_DEVICE_ID
 #define TX_INTR_ID			XPAR_FABRIC_AXIDMA_0_VEC_ID
 
 #define FRAME1_BASE 		(MEM_BASE_ADDR)
