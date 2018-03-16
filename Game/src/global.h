@@ -6,7 +6,6 @@
 #include "xdebug.h"
 #include "string.h"
 #include "sleep.h"
-#include <stdbool.h>
 
 #define DEBUG
 
@@ -57,12 +56,19 @@
 #define FRISK_RIGHT_1_ADDR			(FRISK_RIGHT_0_ADDR + 1412)			// size(bytes): 1412
 #define PLATFORM_BASE_ADDR			(FRISK_RIGHT_1_ADDR + 1412)			// size(bytes): 40964
 #define PLATFORM_LVL_ADDR			(PLATFORM_BASE_ADDR + 40964)		// size(bytes): 18436
-#define LADDER_ADDR					(PLATFORM_LVL_ADDR + 18436)			// size(bytes): 3076
-#define BONUS_ADDR					(LADDER_ADDR + 3076)				// size(bytes): 436
+#define LADDER_ADDR					(PLATFORM_LVL_ADDR + 18436)			// size(bytes): 4036
+#define BONUS_ADDR					(LADDER_ADDR + 4036)				// size(bytes): 436
+#define FIRE_0_ADDR					(BONUS_ADDR + 436)					// size(bytes): 404
+#define FIRE_1_ADDR					(FIRE_0_ADDR + 404)					// size(bytes): 404
+#define SPEAR_0_ADDR				(FIRE_1_ADDR + 404)					// size(bytes): 796
+#define SPEAR_1_ADDR				(SPEAR_0_ADDR + 796)				// size(bytes): 796
+#define SANS_STILL_ADDR				(SPEAR_1_ADDR + 796)				// size(bytes): 1540
 
 #define SUCCESS 	 0
 #define FAILURE 	-1
 
 extern void xil_printf(const char *format, ...);
+
+typedef unsigned char bool;
 
 #endif
