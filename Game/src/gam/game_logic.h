@@ -23,8 +23,8 @@
 
 #define MAX_NUM_BONES   		(5)
 
-#define HORIZONTAL_VELOCITY 	(8)
-#define VERTICAL_VELOCITY 		(5)
+#define HORIZONTAL_VELOCITY 	(4)
+#define VERTICAL_VELOCITY 		(4)
 #define JUMP_VELOCITY 			(10)
 #define GRAVITY 				(-2)
 
@@ -36,8 +36,8 @@ enum direction
 
 struct position
 {
-	u16 x;
-	u16 y;
+	short x;
+	short y;
 };
 
 struct dimension

@@ -6,6 +6,7 @@
 #include "xdebug.h"
 #include "string.h"
 #include "sleep.h"
+#include <stdbool.h>
 
 #define DEBUG
 
@@ -23,23 +24,45 @@
 #define IMG_HEADER_LEN			(4)
 #define CONTENT_BASE_ADDR		(DDR_BASE_ADDR + 0x2000000)
 
-//image and song file locations
-#define GAME_BACKGROUND_ADDR 		(CONTENT_BASE_ADDR)	//0x0210 0000
-#define MENU_BACKGROUND_ADDR		(GAME_BACKGROUND_ADDR + IMG_HEADER_LEN + FRAME_LEN)//0x0219 6004
-#define GAMEOVER_BACKGROUND_ADDR	(MENU_BACKGROUND_ADDR + IMG_HEADER_LEN + FRAME_LEN)//0x0222 C008
-#define FRISK_STILL_ADDR			(GAMEOVER_BACKGROUND_ADDR + IMG_HEADER_LEN + FRAME_LEN)//0x022C 200C
-#define FRISK_LEFT_0_ADDR			(FRISK_STILL_ADDR + IMG_HEADER_LEN + 0x1200)//0x022C 3210
-#define FRISK_LEFT_1_ADDR			(FRISK_LEFT_0_ADDR + IMG_HEADER_LEN + 0x1200)//0x022C 4414
-#define FRISK_RIGHT_0_ADDR			(FRISK_LEFT_1_ADDR + IMG_HEADER_LEN + 0X1200)//0X022C 5618
-#define FRISK_RIGHT_1_ADDR			(FRISK_RIGHT_0_ADDR + IMG_HEADER_LEN + 0X1200)//0X022C 681C
-#define PLATFORM_BASE_ADDR			(FRISK_RIGHT_1_ADDR + IMG_HEADER_LEN + 0X1200)//0x022C 7A20
-#define PLATFORM_LVL1_ADDR			(PLATFORM_BASE_ADDR + IMG_HEADER_LEN + 0x2A50)//0x022 CA474
+/********************************
+ *
+ * Image and song file locations
+ *
+ *******************************/
+// Splash screen
+#define SPLASH_SCREEN				(CONTENT_BASE_ADDR) //0x0210 0000
+
+// Main Menu
+#define MAIN_MENU_BACKGROUND		(SPLASH_SCREEN + 614404) 			// size(bytes): 614404
+#define MAIN_MENU_PRESS_START		(MAIN_MENU_BACKGROUND + 614404) 	// size(bytes): 6388
+
+// Game Over
+#define GAME_OVER_BACKGROUND		(MAIN_MENU_PRESS_START + 6388) 		// size(bytes): 614404
+#define GAME_OVER_DONT_GIVE_UP		(GAME_OVER_BACKGROUND + 614404)		// size(bytes): 37048
+#define GAME_OVER_STAY_DETERMINED	(GAME_OVER_DONT_GIVE_UP + 37048)	// size(bytes): 37048
+#define GAME_OVER_PRESS_START		(GAME_OVER_STAY_DETERMINED + 37048)	// size(bytes): 37048
+
+// Pause Menu
+#define PAUSE_MENU_BACKGROUND		(GAME_OVER_PRESS_START + 37048) 	// size(bytes): 150004
+#define PAUSE_MENU_CONTINUE			(PAUSE_MENU_BACKGROUND + 150004)	// size(bytes): 3844
+#define PAUSE_MENU_EXIT				(PAUSE_MENU_CONTINUE + 3844)		// size(bytes): 3844
+
+// Game Scene
+#define GAME_BACKGROUND 			(PAUSE_MENU_EXIT + 3844)			// size(bytes):	614404
+#define FRISK_STILL_ADDR			(GAME_BACKGROUND + 614404)			// size(bytes): 1412
+#define FRISK_LADDER_ADDR			(FRISK_STILL_ADDR + 1412)			// size(bytes): 1412
+#define FRISK_LEFT_0_ADDR			(FRISK_LADDER_ADDR + 1412)			// size(bytes): 1412
+#define FRISK_LEFT_1_ADDR			(FRISK_LEFT_0_ADDR + 1412)			// size(bytes): 1412
+#define FRISK_RIGHT_0_ADDR			(FRISK_LEFT_1_ADDR + 1412)			// size(bytes): 1412
+#define FRISK_RIGHT_1_ADDR			(FRISK_RIGHT_0_ADDR + 1412)			// size(bytes): 1412
+#define PLATFORM_BASE_ADDR			(FRISK_RIGHT_1_ADDR + 1412)			// size(bytes): 40964
+#define PLATFORM_LVL_ADDR			(PLATFORM_BASE_ADDR + 40964)		// size(bytes): 18436
+#define LADDER_ADDR					(PLATFORM_LVL_ADDR + 18436)			// size(bytes): 3076
+#define BONUS_ADDR					(LADDER_ADDR + 3076)				// size(bytes): 436
 
 #define SUCCESS 	 0
 #define FAILURE 	-1
 
 extern void xil_printf(const char *format, ...);
-
-typedef unsigned char bool;
 
 #endif

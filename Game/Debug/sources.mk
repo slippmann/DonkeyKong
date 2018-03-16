@@ -20,6 +20,7 @@ src/ctr \
 src/gam \
 src/int \
 src \
+src/tmr \
 src/vga \
 src/vid \
 

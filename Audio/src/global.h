@@ -5,37 +5,68 @@
 #include "xil_exception.h"
 #include "xdebug.h"
 #include "string.h"
+#include "sleep.h"
+#include <stdbool.h>
 
+#define DEBUG
 
-// Device hardware build related constants.
-#define DMA_DEV_ID		XPAR_AXIDMA_1_DEVICE_ID
-#define DDR_BASE_ADDR	XPAR_PS7_DDR_0_S_AXI_BASEADDR
-#define MEM_BASE_ADDR	(DDR_BASE_ADDR + 0x1000000)
-#define TX_INTR_ID		XPAR_FABRIC_AXIDMA_1_VEC_ID
-#define TX_BUFFER_BASE	(MEM_BASE_ADDR + 0x00100000)
+#define DDR_BASE_ADDR			XPAR_PS7_DDR_0_S_AXI_BASEADDR
+#define MEM_BASE_ADDR		  	(DDR_BASE_ADDR + 0x1000000)
 
-#define INTC_DEVICE_ID  XPAR_SCUGIC_SINGLE_DEVICE_ID
-#define INTC			XScuGic
-#define INTC_HANDLER	XScuGic_InterruptHandler
+#define FRAME_WIDTH 			(640)
+#define FRAME_HEIGHT			(480)
+#define FRAME_LEN				(FRAME_WIDTH * FRAME_HEIGHT * 2) /* 640x480 = 307200 pixels * 2 bytes/pixel= 614400 bytes */
 
-// Audio and Audio Descriptor related constants
-#define MAX_PKT_LEN				0x2EE00 //192000 bytes i.e. one second
-#define GAME_SONG_TRANSFERS		32 //32 transfers for the full game song
-#define MENU_SONG_TRANSFERS 	10 //10 transfers for the full menu song
+#define VIDEO_MEM_SIZE		 	(FRAME_LEN * 2) /* two frames */
+
+#define GAME_BASE_ADDR			(MEM_BASE_ADDR + VIDEO_MEM_SIZE)
+
+#define IMG_HEADER_LEN			(4)
+#define CONTENT_BASE_ADDR		(DDR_BASE_ADDR + 0x2000000)
+
+/********************************
+ *
+ * Image and song file locations
+ *
+ *******************************/
+// Splash screen
+#define SPLASH_SCREEN				(CONTENT_BASE_ADDR) //0x0210 0000
+
+// Main Menu
+#define MAIN_MENU_BACKGROUND		(SPLASH_SCREEN + 614404) 			// size(bytes): 614404
+#define MAIN_MENU_PRESS_START		(MAIN_MENU_BACKGROUND + 614404) 	// size(bytes): 6388
+
+// Game Over
+#define GAME_OVER_BACKGROUND		(MAIN_MENU_PRESS_START + 6388) 		// size(bytes): 614404
+#define GAME_OVER_DONT_GIVE_UP		(GAME_OVER_BACKGROUND + 614404)		// size(bytes): 37048
+#define GAME_OVER_STAY_DETERMINED	(GAME_OVER_DONT_GIVE_UP + 37048)	// size(bytes): 37048
+#define GAME_OVER_PRESS_START		(GAME_OVER_STAY_DETERMINED + 37048)	// size(bytes): 37048
+
+// Pause Menu
+#define PAUSE_MENU_BACKGROUND		(GAME_OVER_PRESS_START + 37048) 	// size(bytes): 150004
+#define PAUSE_MENU_CONTINUE			(PAUSE_MENU_BACKGROUND + 150004)	// size(bytes): 3844
+#define PAUSE_MENU_EXIT				(PAUSE_MENU_CONTINUE + 3844)		// size(bytes): 3844
+
+// Game Scene
+#define GAME_BACKGROUND 			(PAUSE_MENU_EXIT + 3844)			// size(bytes):	614404
+#define FRISK_STILL_ADDR			(GAME_BACKGROUND + 614404)			// size(bytes): 1412
+#define FRISK_LADDER_ADDR			(FRISK_STILL_ADDR + 1412)			// size(bytes): 1412
+#define FRISK_LEFT_0_ADDR			(FRISK_LADDER_ADDR + 1412)			// size(bytes): 1412
+#define FRISK_LEFT_1_ADDR			(FRISK_LEFT_0_ADDR + 1412)			// size(bytes): 1412
+#define FRISK_RIGHT_0_ADDR			(FRISK_LEFT_1_ADDR + 1412)			// size(bytes): 1412
+#define FRISK_RIGHT_1_ADDR			(FRISK_RIGHT_0_ADDR + 1412)			// size(bytes): 1412
+#define PLATFORM_BASE_ADDR			(FRISK_RIGHT_1_ADDR + 1412)			// size(bytes): 40964
+#define PLATFORM_LVL_ADDR			(PLATFORM_BASE_ADDR + 40964)		// size(bytes): 18436
+#define LADDER_ADDR					(PLATFORM_LVL_ADDR + 18436)			// size(bytes): 3076
+#define BONUS_ADDR					(LADDER_ADDR + 3076)				// size(bytes): 436
+
+// Song
+#define SONG_ADDR				(BONUS_ADDR + 436)
 #define GAME_SONG_LENGTH 		0x5F350C //6239500 bytes, length of game song
-#define MENU_SONG_LENGTH		0x1D9780 //1939328 bytes, length of menu song
 
 #define SUCCESS 	 0
 #define FAILURE 	-1
 
-// Timeout loop counter for reset
-#define RESET_TIMEOUT_COUNTER	10000
-
-#ifndef DEBUG
 extern void xil_printf(const char *format, ...);
-#endif
-
-
-typedef unsigned char bool;
 
 #endif

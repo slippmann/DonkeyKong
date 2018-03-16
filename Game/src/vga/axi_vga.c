@@ -207,7 +207,7 @@ void FrameIntrHandler(void *Callback)
 * @note		None.
 *
 ******************************************************************************/
-void DrawFrame(u16 * img)
+void UpdateScreen(u16 * img)
 {
 	newFrame = 0;
 

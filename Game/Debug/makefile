@@ -10,6 +10,7 @@ RM := rm -rf
 -include sources.mk
 -include src/vid/subdir.mk
 -include src/vga/subdir.mk
+-include src/tmr/subdir.mk
 -include src/int/subdir.mk
 -include src/gam/subdir.mk
 -include src/ctr/subdir.mk

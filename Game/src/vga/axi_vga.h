@@ -32,6 +32,6 @@ struct Image
 
 int InitVGA(void);
 void DestroyVGA(void);
-void DrawFrame(u16 * img);
+void UpdateScreen(u16 * img);
 
 #endif /* _AXI_VGA_H_ */

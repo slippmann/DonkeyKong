@@ -17,6 +17,7 @@ struct image {
 };
 
 void CopyImage(struct image * dest, struct image * src);
-void DrawImage(u16 * frameptr, struct image * sprite, u16 x, u16 y);
+void DrawImage(u16 * frameptr, struct image * sprite, short x, short y);
+void EraseImage(u16 * frameptr, struct image * background, struct image * img, short x, short y);
 
 #endif /* _VIDEO_H_ */
